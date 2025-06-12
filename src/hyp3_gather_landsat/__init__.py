@@ -1,4 +1,4 @@
-"""Plugin to get landsat scenes from an input location"""
+"""Plugin to get landsat scenes from an input location."""
 
 from importlib.metadata import version
 
