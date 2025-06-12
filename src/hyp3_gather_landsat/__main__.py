@@ -13,9 +13,17 @@ def main() -> None:
     parser = ArgumentParser()
     parser.add_argument('--bucket', help='AWS S3 bucket HyP3 for upload the final product(s)')
     parser.add_argument('--bucket-prefix', default='', help='Add a bucket prefix to product(s)')
-
+    parser.add_argument('--start-date', type=str, help='Start date of the images (YYYY-MM-DD)')
+    parser.add_argument('--end-date', type=str, help='End date of the images (YYYY-MM-DD)')
     # TODO: Your arguments here
-    parser.add_argument('--greeting', default='Hello world!', help='Write this greeting to a product file')
+    parser.add_argument(
+        '--location',
+        type=str,
+        nargs='+',
+        help='LON LAT',
+    )
+
+    
 
     args = parser.parse_args()
 
@@ -24,7 +32,9 @@ def main() -> None:
     )
 
     product_file = process_gather_landsat(
-        greeting=args.greeting,
+        location=args.location,
+        start_date=args.start_date,
+        end_date=args.end_date
     )
 
     if args.bucket:
