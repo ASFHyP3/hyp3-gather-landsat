@@ -17,6 +17,7 @@ LANDSAT_BUCKET = 'usgs-landsat'
 
 log = logging.getLogger(__name__)
 
+
 def get_lc2_path(metadata: dict) -> str:
     """Get Landsat link.
 
@@ -39,6 +40,7 @@ def get_lc2_path(metadata: dict) -> str:
 
     return band['href'].replace('https://landsatlook.usgs.gov/data/', f'/vsis3/{LANDSAT_BUCKET}/')
 
+
 def process_gather_landsat(location: list, start_date: str, end_date: str) -> Path:
     """Download a Landsat image.
 
@@ -54,16 +56,16 @@ def process_gather_landsat(location: list, start_date: str, end_date: str) -> Pa
     os.environ['AWS_REQUEST_PAYER'] = 'requester'
     gdal.SetConfigOption('AWS_REGION', 'us-west-2')
     gdal.SetConfigOption('AWS_REQUEST_PAYER', 'requester')
-    
-    lon=location[0]
-    lat=location[1]
+
+    lon = location[0]
+    lat = location[1]
     search = LANDSAT_CATALOG.search(
-             collections=['landsat-c2l1'], # Landsat 8 collection
-             datetime=f'{start_date}/{end_date}',
-             intersects={"type": "Point", "coordinates": [float(lon), float(lat)]}, # Coordinates
-         )
+        collections=['landsat-c2l1'],  # Landsat 8 collection
+        datetime=f'{start_date}/{end_date}',
+        intersects={'type': 'Point', 'coordinates': [float(lon), float(lat)]},  # Coordinates
+    )
     for item in list(search.items()):
-        url=get_lc2_path(item.to_dict())
-        gdal.Translate(url.split('/')[-1],url)
-    
-    return Path(f'./{url.split('/')[-1]}')
+        url = get_lc2_path(item.to_dict())
+        gdal.Translate(url.split('/')[-1], url)
+
+    return Path(f'./{url.split("/")[-1]}')
