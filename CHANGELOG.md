@@ -9,4 +9,9 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.1.0]
 
 ### Added
+- New function to download Landsat imagery using a location point and start and end dates.
+  
+## [0.1.0]
+
+### Added
 - hyp3-gather-landsat plugin created with the [HyP3 Cookiecutter](https://github.com/ASFHyP3/hyp3-cookiecutter)
