@@ -23,19 +23,13 @@ def main() -> None:
         help='LON LAT',
     )
 
-    
-
     args = parser.parse_args()
 
     logging.basicConfig(
         format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO
     )
 
-    product_file = process_gather_landsat(
-        location=args.location,
-        start_date=args.start_date,
-        end_date=args.end_date
-    )
+    product_file = process_gather_landsat(location=args.location, start_date=args.start_date, end_date=args.end_date)
 
     if args.bucket:
         upload_file_to_s3(product_file, args.bucket, args.bucket_prefix)
