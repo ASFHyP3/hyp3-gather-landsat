@@ -67,7 +67,7 @@ def process_gather_landsat(location: list, start_date: str, end_date: str) -> Pa
     )
     for item in list(search.items()):
         url = get_lc2_path(item.to_dict())
-        filename=url.split('/')[-1]
+        filename = url.split('/')[-1]
         try:
             gdal.Translate(filename, url)
         except RuntimeError as e:
