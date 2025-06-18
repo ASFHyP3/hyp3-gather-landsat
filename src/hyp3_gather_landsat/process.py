@@ -2,6 +2,7 @@
 
 import logging
 import os
+import warnings
 from pathlib import Path
 
 import pystac_client
@@ -36,7 +37,7 @@ def get_lc2_path(metadata: dict) -> str:
         if band is None:
             band = metadata['assets']['pan']
     else:
-        raise NotImplementedError(f'autoRIFT processing not available for this platform. {metadata["id"][:3]}')
+        raise NotImplementedError(f'AK Fire Safe processing not available for this platform. {metadata["id"][:3]}')
 
     return band['href'].replace('https://landsatlook.usgs.gov/data/', f'/vsis3/{LANDSAT_BUCKET}/')
 
@@ -66,6 +67,13 @@ def process_gather_landsat(location: list, start_date: str, end_date: str) -> Pa
     )
     for item in list(search.items()):
         url = get_lc2_path(item.to_dict())
-        gdal.Translate(url.split('/')[-1], url)
+        filename=url.split('/')[-1]
+        try:
+            gdal.Translate(filename, url)
+        except RuntimeError as e:
+            if 'The specified key does not exist.' in str(e):
+                warnings.warn(f'The S3 bucket does not have the file {filename}', UserWarning)
+            else:
+                raise e
 
-    return Path(f'./{url.split("/")[-1]}')
+    return Path(f'./{filename}')
