@@ -2,6 +2,7 @@
 
 import logging
 import os
+import warnings
 from pathlib import Path
 
 import pystac_client
