@@ -4,8 +4,10 @@ import logging
 import os
 import warnings
 from pathlib import Path
+from shutil import make_archive
 
 import pystac_client
+from hyp3lib.aws import upload_file_to_s3
 from osgeo import gdal
 
 
@@ -42,13 +44,37 @@ def get_lc2_path(metadata: dict) -> str:
     return band['href'].replace('https://landsatlook.usgs.gov/data/', f'/vsis3/{LANDSAT_BUCKET}/')
 
 
-def process_gather_landsat(location: list, start_date: str, end_date: str) -> Path:
+def get_product_name(start_date: str, end_date: str) -> str:
+    """Get the name of the compressed file.
+
+    Args:
+        start_date:  The start date of the images
+        end_date:  The end date of the images
+
+    Returns:
+        Filename of the compressed file
+    """
+    start = start_date.replace('-', '')
+    end = end_date.replace('-', '')
+
+    return f'LANDSAT_{start}_{end}'
+
+
+def process_gather_landsat(
+    location: list,
+    start_date: str,
+    end_date: str,
+    bucket: str | None = None,
+    bucket_prefix: str = '',
+) -> None:
     """Download a Landsat image.
 
     Args:
         location: List with lon/lat coordinates.
         start_date:  The start date of the images
         end_date:  The end date of the images
+        bucket: AWS S3 bucket HyP3 for upload the final product(s)
+        bucket_prefix: Add a bucket prefix to product(s)
 
     Returns:
         Filename of the downloaded image
@@ -65,15 +91,24 @@ def process_gather_landsat(location: list, start_date: str, end_date: str) -> Pa
         datetime=f'{start_date}/{end_date}',
         intersects={'type': 'Point', 'coordinates': [float(lon), float(lat)]},  # Coordinates
     )
+
+    product_name = get_product_name(start_date, end_date)
+    product_dir = Path(product_name)
+    product_dir.mkdir(parents=True, exist_ok=True)
+
     for item in list(search.items()):
         url = get_lc2_path(item.to_dict())
         filename = url.split('/')[-1]
+        product_path = f'{product_name}/{filename}'
         try:
-            gdal.Translate(filename, url)
+            gdal.Translate(product_path, url)
         except RuntimeError as e:
             if 'The specified key does not exist.' in str(e):
                 warnings.warn(f'The S3 bucket does not have the file {filename}', UserWarning)
             else:
                 raise e
 
-    return Path(f'./{filename}')
+    output_zip = make_archive(base_name=product_name, format='zip', base_dir=product_name)
+
+    if bucket:
+        upload_file_to_s3(output_zip, bucket, bucket_prefix)
