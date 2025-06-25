@@ -3,8 +3,6 @@
 import logging
 from argparse import ArgumentParser
 
-from hyp3lib.aws import upload_file_to_s3
-
 from hyp3_gather_landsat.process import process_gather_landsat
 
 
@@ -29,10 +27,13 @@ def main() -> None:
         format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO
     )
 
-    product_file = process_gather_landsat(location=args.location, start_date=args.start_date, end_date=args.end_date)
-
-    if args.bucket:
-        upload_file_to_s3(product_file, args.bucket, args.bucket_prefix)
+    process_gather_landsat(
+        location=args.location,
+        start_date=args.start_date,
+        end_date=args.end_date,
+        bucket=args.bucket,
+        bucket_prefix=args.bucket_prefix,
+    )
 
 
 if __name__ == '__main__':
