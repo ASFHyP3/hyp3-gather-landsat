@@ -83,7 +83,7 @@ def process_gather_landsat(
     os.environ['AWS_REQUEST_PAYER'] = 'requester'
     gdal.SetConfigOption('AWS_REGION', 'us-west-2')
     gdal.SetConfigOption('AWS_REQUEST_PAYER', 'requester')
-
+    print(location)
     lon = location[0]
     lat = location[1]
     search = LANDSAT_CATALOG.search(
