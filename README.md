@@ -5,13 +5,38 @@ Plugin to get landsat scenes from an input location
 ## Usage
 The `hyp3_gather_landsat` command line tool can be run using the following structure:
 ```bash
-python -m hyp3_gather_landsat --start-date 2025-05-01 --end-date 2025-05-07 --location -163.97 54.756
+python -m hyp3_gather_landsat \
+  --start-date 2025-05-01 \
+  --end-date 2025-05-07 \
+  --location -163.97 54.756
 ```
 Where:
 
 * `--start-date` is the start date of the images in the format (YYYY-MM-DD)
 * `--end-date` is the end date of the images in the format (YYYY-MM-DD)
 * `--location` is the longitude and latitude coordinates for the location point in the format `lon lat`
+
+> [!IMPORTANT]
+> Credentials are necessary to access Landsat data. See the Credentials section for more information.
+
+### Credentials
+
+Generally, credentials are provided via environment variables, but some may be provided by command-line arguments or via a `.netrc` file. 
+
+#### AWS Credentials
+
+You must provide AWS credentials because the data is hosted by USGS in a "requester pays" bucket. To provide AWS credentials, you can either use an AWS profile specified in your `~/.aws/credentials` by exporting:
+```
+export AWS_PROFILE=your-profile
+```
+or by exporting credential environment variables:
+```
+export AWS_ACCESS_KEY_ID=your-id
+export AWS_SECRET_ACCESS_KEY=your-key
+export AWS_SESSION_TOKEN=your-token  # optional; for when using temporary credentials
+```
+
+For more information, please see: <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/credentials.html>
 
 ## Developer Setup
 1. Ensure that conda is installed on your system (we recommend using [mambaforge](https://github.com/conda-forge/miniforge#mambaforge) to reduce setup times).
