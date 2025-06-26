@@ -111,4 +111,4 @@ def process_gather_landsat(
     output_zip = make_archive(base_name=product_name, format='zip', base_dir=product_name)
 
     if bucket:
-        upload_file_to_s3(output_zip, bucket, bucket_prefix)
+        upload_file_to_s3(Path(output_zip), bucket, bucket_prefix)
