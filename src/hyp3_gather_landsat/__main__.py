@@ -16,12 +16,14 @@ def main() -> None:
     # TODO: Your arguments here
     parser.add_argument(
         '--location',
-        type=str,
+        type=str.split,
         nargs='+',
         help='LON LAT',
     )
 
     args = parser.parse_args()
+
+    args.location = [item for sublist in args.location for item in sublist]
 
     logging.basicConfig(
         format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO
