@@ -9,7 +9,7 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [1.0.0]
 
 ### Added
-- New function to download Landsat imagery using a location point and start and end dates.
+- Added a new function to download Landsat imagery using a location point and start and end dates.
   
 ## [0.1.0]
 
