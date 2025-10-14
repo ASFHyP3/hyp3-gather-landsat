@@ -1,13 +1,12 @@
 """gather-landsat processing."""
-
 import logging
 import os
 import warnings
+from argparse import ArgumentParser
 from pathlib import Path
 from shutil import make_archive
 
 import pystac_client
-from argparse import ArgumentParser
 from hyp3lib.aws import upload_file_to_s3
 from osgeo import gdal
 

@@ -13,10 +13,10 @@ def main() -> None:
     parser.add_argument(
         '++process',
         choices=[
-            "gather_landsat",
-            "pull_perimeter",
+            'gather_landsat',
+            'pull_perimeter',
         ],
-        default="gather_landsat",
+        default='gather_landsat',
         help='Select the HyP3 entrypoint to use',  # HyP3 entrypoints are specified in `pyproject.toml`
     )
 

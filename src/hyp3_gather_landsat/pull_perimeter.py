@@ -1,15 +1,14 @@
-import datetime as dt
-import geopandas as gpd
-import requests
+"""pull-perimeter processing."""
 from argparse import ArgumentParser
-from owslib.ogcapi.features import Features
 
 
-def pull_perimeter():
+def pull_perimeter() -> None:
+    """Pull perimeter."""
     print('HERE WE WILL PULL THE PERIMETER')
 
 
 def main() -> None:
+    """HyP3 entrypoint for pull_perimeter."""
     parser = ArgumentParser()
     parser.add_argument('--bucket', help='AWS S3 bucket HyP3 for upload the final product(s)')
     parser.add_argument('--bucket-prefix', default='', help='Add a bucket prefix to product(s)')
