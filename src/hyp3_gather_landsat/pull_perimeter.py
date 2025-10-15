@@ -13,7 +13,7 @@ from owslib.ogcapi.features import Features
 def iter_features_offset(
     w: Features,
     collection_id: str,
-    params: dict = None,
+    params: dict | None = None,
     page_size: int = 100,
     max_pages: int | None = None,
     progress: bool = True,
@@ -119,10 +119,10 @@ def pull_perimeter(
     api = Features(url=OGC_URL)
     api.feature_collections()
 
-    start = dt.datetime.strptime(start, '%Y-%m-%d')
-    start = dt.datetime.strftime(start, '%Y-%m-%dT%H:%M:%S+00:00')
-    end = dt.datetime.strptime(end, '%Y-%m-%d')
-    end = dt.datetime.strftime(end, '%Y-%m-%dT%H:%M:%S+00:00')
+    start_date = dt.datetime.strptime(start, '%Y-%m-%d')
+    start = dt.datetime.strftime(start_date, '%Y-%m-%dT%H:%M:%S+00:00')
+    end_date = dt.datetime.strptime(end, '%Y-%m-%d')
+    end = dt.datetime.strftime(end_date, '%Y-%m-%dT%H:%M:%S+00:00')
 
     params = {'bbox': extent, 'datetime': [start + '/' + end], 'filter': 'farea>4'}
 
@@ -131,7 +131,6 @@ def pull_perimeter(
         collection_id='public.eis_fire_lf_perimeter_nrt',
         params=params,
         page_size=1000,
-        #max_pages=10,  # set higher as needed
         progress=True,
     )
 
