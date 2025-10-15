@@ -134,14 +134,7 @@ def pull_perimeter(
         progress=True,
     )
 
-    res = {
-        'type': 'FeatureCollection',
-        'features': features,
-        'numberMatched': len(features),
-        'numberReturned': len(features),
-    }
-
-    lf = gpd.GeoDataFrame.from_features(res['features']).set_crs('EPSG:4326')
+    lf = gpd.GeoDataFrame.from_features(features).set_crs('EPSG:4326')
 
     lf.to_file(output_name, driver='GeoJSON')
 
