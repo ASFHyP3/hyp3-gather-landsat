@@ -76,9 +76,6 @@ def process_gather_landsat(
         end_date:  The end date of the images
         bucket: AWS S3 bucket HyP3 for upload the final product(s)
         bucket_prefix: Add a bucket prefix to product(s)
-
-    Returns:
-        Filename of the downloaded image
     """
     os.environ['AWS_REGION'] = 'us-west-2'
     os.environ['AWS_REQUEST_PAYER'] = 'requester'
