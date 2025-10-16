@@ -13,6 +13,8 @@ dependencies:
   - pytest-cov
   # For running
   - hyp3lib>=3,<4
+  - geopandas<1
+  - owslib==0.28.1
   # TODO: insert conda-forge dependencies as list here
   - pip:
       - -r requirements-static.txt

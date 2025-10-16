@@ -1,41 +1,35 @@
 """gather-landsat processing for HyP3."""
 
+import argparse
 import logging
+import sys
 from argparse import ArgumentParser
-
-from hyp3_gather_landsat.process import process_gather_landsat
+from importlib.metadata import entry_points
 
 
 def main() -> None:
     """HyP3 entrypoint for hyp3_gather_landsat."""
-    parser = ArgumentParser()
-    parser.add_argument('--bucket', help='AWS S3 bucket HyP3 for upload the final product(s)')
-    parser.add_argument('--bucket-prefix', default='', help='Add a bucket prefix to product(s)')
-    parser.add_argument('--start-date', type=str, help='Start date of the images (YYYY-MM-DD)')
-    parser.add_argument('--end-date', type=str, help='End date of the images (YYYY-MM-DD)')
-    # TODO: Your arguments here
+    parser = ArgumentParser(prefix_chars='+', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
-        '--location',
-        type=str.split,
-        nargs='+',
-        help='LON LAT',
+        '++process',
+        choices=[
+            'gather_landsat',
+            'pull_perimeter',
+        ],
+        default='gather_landsat',
+        help='Select the HyP3 entrypoint to use',  # HyP3 entrypoints are specified in `pyproject.toml`
     )
 
-    args = parser.parse_args()
-
-    args.location = [item for sublist in args.location for item in sublist]
+    args, unknowns = parser.parse_known_args()
 
     logging.basicConfig(
         format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO
     )
 
-    process_gather_landsat(
-        location=args.location,
-        start_date=args.start_date,
-        end_date=args.end_date,
-        bucket=args.bucket,
-        bucket_prefix=args.bucket_prefix,
-    )
+    process_entry_point = list(entry_points(group='hyp3', name=args.process))[0]
+
+    sys.argv = [args.process, *unknowns]
+    sys.exit(process_entry_point.load()())
 
 
 if __name__ == '__main__':

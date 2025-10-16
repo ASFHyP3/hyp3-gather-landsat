@@ -3,6 +3,7 @@
 import logging
 import os
 import warnings
+from argparse import ArgumentParser
 from pathlib import Path
 from shutil import make_archive
 
@@ -75,9 +76,6 @@ def process_gather_landsat(
         end_date:  The end date of the images
         bucket: AWS S3 bucket HyP3 for upload the final product(s)
         bucket_prefix: Add a bucket prefix to product(s)
-
-    Returns:
-        Filename of the downloaded image
     """
     os.environ['AWS_REGION'] = 'us-west-2'
     os.environ['AWS_REQUEST_PAYER'] = 'requester'
@@ -112,3 +110,35 @@ def process_gather_landsat(
 
     if bucket:
         upload_file_to_s3(Path(output_zip), bucket, bucket_prefix)
+
+
+def main() -> None:
+    """HyP3 entrypoint for hyp3_gather_landsat."""
+    parser = ArgumentParser()
+    parser.add_argument('--bucket', help='AWS S3 bucket HyP3 for upload the final product(s)')
+    parser.add_argument('--bucket-prefix', default='', help='Add a bucket prefix to product(s)')
+    parser.add_argument('--start-date', type=str, help='Start date of the images (YYYY-MM-DD)')
+    parser.add_argument('--end-date', type=str, help='End date of the images (YYYY-MM-DD)')
+    # TODO: Your arguments here
+    parser.add_argument(
+        '--location',
+        type=str.split,
+        nargs='+',
+        help='LON LAT',
+    )
+
+    args = parser.parse_args()
+
+    args.location = [item for sublist in args.location for item in sublist]
+
+    logging.basicConfig(
+        format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', level=logging.INFO
+    )
+
+    process_gather_landsat(
+        location=args.location,
+        start_date=args.start_date,
+        end_date=args.end_date,
+        bucket=args.bucket,
+        bucket_prefix=args.bucket_prefix,
+    )

@@ -1,11 +1,16 @@
 # HyP3 gather-landsat
 
-Plugin to get landsat scenes from an input location
+Plugin for AK fire safe applications
 
 ## Usage
-The `hyp3_gather_landsat` command line tool can be run using the following structure:
+
+The HyP3-gather-landsat plugin provides workflows (accessible directly in Python or via a CLI) that can be used to download LANDSAT images or pull fire perimeters
+
+### `gather-landsat` workflow
+
+The `gather_landsat` command line tool can be run using the following structure:
 ```bash
-python -m hyp3_gather_landsat \
+python -m hyp3_gather_landsat ++process gather_landsat \
   --start-date 2025-05-01 \
   --end-date 2025-05-07 \
   --location -163.97 54.756
@@ -18,6 +23,21 @@ Where:
 
 > [!IMPORTANT]
 > Credentials are necessary to access Landsat data. See the Credentials section for more information.
+
+### `pull-perimeter` workflow
+
+The `pull_perimeter` command line tool can be run using the following structure:
+```bash
+python -m hyp3_gather_landsat ++process pull_perimeter \
+  --start-date 2025-06-01 \
+  --end-date 2025-08-01 \
+  --extent -169.01 52.37 -130.16 71.66
+```
+Where:
+
+* `--start-date` is the start date of the images in the format (YYYY-MM-DD)
+* `--end-date` is the end date of the images in the format (YYYY-MM-DD)
+* `--extent` is the bounding box in longitude and latitude coordinates in the format `min_lon min_lat max_lon max_lat`
 
 ### Credentials
 
